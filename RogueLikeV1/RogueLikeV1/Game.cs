@@ -1,4 +1,5 @@
 ﻿using RLNET;
+using RogueLikeV1.Core;
 using System;
 
 namespace RogueLikeV1
@@ -56,18 +57,18 @@ namespace RogueLikeV1
 
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            //background and text colour for each console
-            _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, RLColor.Black);
-            _mapConsole.Print(1, 1, "Map", RLColor.White);
+            //now using assigned colours from the Colours class to set the background and text colours for each console
+            _mapConsole.SetBackColor(0, 0, _mapWidth, _mapHeight, Colours.FloorBackground);
+            _mapConsole.Print(1, 1, "Map", Colours.TextHeading);
 
-            _messageConsole.SetBackColor(0, 0, _messageWidth, _messageHeight, RLColor.Gray);
-            _messageConsole.Print(1, 1, "Message", RLColor.White);
+            _messageConsole.SetBackColor(0, 0, _messageWidth, _messageHeight, Swatch.DbDeepWater);
+            _messageConsole.Print(1, 1, "Messages", Colours.TextHeading);
 
-            _statConsole.SetBackColor(0, 0, _statWidth, _statHeight, RLColor.Brown);
-            _statConsole.Print(1, 1, "Stats", RLColor.White);
+            _statConsole.SetBackColor(0, 0, _statWidth, _statHeight, Swatch.DbOldStone);
+            _statConsole.Print(1, 1, "Stats", Colours.TextHeading);
 
-            _inventoryConsole.SetBackColor(0, 0, _inventoryWidth, _inventoryHeight, RLColor.Cyan);
-            _inventoryConsole.Print(1, 1, "Inventory", RLColor.White);
+            _inventoryConsole.SetBackColor(0, 0, _inventoryWidth, _inventoryHeight, Swatch.DbWood);
+            _inventoryConsole.Print(1, 1, "Inventory", Colours.TextHeading);
         }
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
