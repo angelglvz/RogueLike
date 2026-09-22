@@ -45,5 +45,18 @@ namespace RogueLikeV1.Core
                 }
             }
         }
+
+        public void UpdatePlayerFieldOfView()
+        {
+            Player player = Game.Player;
+            ComputeFov(player.X, player.Y, player.Awareness, true);
+            foreach (Cell cell in GetAllCells())
+            {
+                if (IsInFov(cell.X, cell.Y))
+                {
+                    SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
+                }
+            }
+        }
     }
 }

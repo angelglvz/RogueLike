@@ -39,6 +39,8 @@ namespace RogueLikeV1
 
         public static DungeonMap DungeonMap { get; private set; }
 
+        public static Player Player { get; private set; }
+
         public static void Main()
         {
 
@@ -50,12 +52,14 @@ namespace RogueLikeV1
 
             string fontFileName = @"Elementos\terminal8x8.png";
             string consoleTitle = "RogueLike V1 - Level 1";
+            _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
+
+            Player = new Player();
 
             MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight);
             DungeonMap = mapGenerator.CreateMap();
 
-            _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
-
+            DungeonMap.UpdatePlayerFieldOfView();
             _rootConsole.Update += OnRootConsoleUpdate;
             _rootConsole.Render += OnRootConsoleRender;
             _rootConsole.Run();
@@ -85,6 +89,7 @@ namespace RogueLikeV1
             RLConsole.Blit(_inventoryConsole, 0, 0, _inventoryWidth, _inventoryHeight, _rootConsole, 0, 0);
             _rootConsole.Draw();
             DungeonMap.Draw(_mapConsole);
+            Player.Draw(_mapConsole, DungeonMap);
         }
     }
 }
