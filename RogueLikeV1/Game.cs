@@ -1,6 +1,7 @@
 ﻿using RLNET;
 using RogueLikeV1.Core;
 using RogueLikeV1.Systems;
+using RogueSharp.Random;
 using System;
 
 namespace RogueLikeV1
@@ -44,6 +45,8 @@ namespace RogueLikeV1
 
         public static CommandSystem CommandSystem { get; private set; }
 
+        public static IRandom Random { get; private set; }
+
         public static void Main()
         {
 
@@ -61,7 +64,10 @@ namespace RogueLikeV1
 
             Player = new Player();
 
-            MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight);
+            int seed = (int)DateTime.UtcNow.Ticks;
+            Random = new DotNetRandom(seed);
+
+            MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight, 20, 13, 7);
             DungeonMap = mapGenerator.CreateMap();
 
             DungeonMap.UpdatePlayerFieldOfView();

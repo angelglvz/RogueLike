@@ -1,10 +1,17 @@
 ﻿using RLNET;
 using RogueSharp;
+using System.Collections.Generic;
 
 namespace RogueLikeV1.Core
 {
     public class DungeonMap: Map
     {
+        public List<Rectangle> Rooms;
+
+        public DungeonMap()
+        {
+            Rooms = new List<Rectangle>();
+        }
 
         public void Draw(RLConsole mapConsole)
         {
