@@ -41,7 +41,7 @@ namespace RogueLikeV1
 
         public static DungeonMap DungeonMap { get; private set; }
 
-        public static Player Player { get; private set; }
+        public static Player Player { get; set; }
 
         public static CommandSystem CommandSystem { get; private set; }
 
@@ -61,8 +61,6 @@ namespace RogueLikeV1
 
             
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
-
-            Player = new Player();
 
             int seed = (int)DateTime.UtcNow.Ticks;
             Random = new DotNetRandom(seed);
