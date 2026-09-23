@@ -1,6 +1,7 @@
 ﻿using RLNET;
 using RogueSharp;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RogueLikeV1.Core
 {
@@ -148,6 +149,17 @@ namespace RogueLikeV1.Core
                 }
             }
             return false;
+        }
+
+        public void RemoveMonster(Monster monster)
+        {
+            _monsters.Remove(monster);
+            SetIsWalkable(monster.X, monster.Y, true);
+        }
+
+        public Monster GetMonsterAt(int x, int y)
+        {
+            return _monsters.FirstOrDefault(m => m.X == x && m.Y == y);
         }
     }
 }
