@@ -8,7 +8,6 @@ namespace RogueLikeV1
 {
     public class Game
     {
-        private static int _steps = 0;
         //main screen width and height
         private static readonly int _screenWidth = 100;
         private static readonly int _screenHeight = 70;
@@ -124,12 +123,6 @@ namespace RogueLikeV1
             {
                 _renderRequired = true;
             }
-            if (didPlayerAct)
-            {
-                // Every time the player acts increment the steps and log it
-                MessageLog.Add($"Step # {++_steps}");
-                _renderRequired = true;
-            }
         }
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
@@ -141,6 +134,7 @@ namespace RogueLikeV1
                 DungeonMap.Draw(_mapConsole);
                 Player.Draw(_mapConsole, DungeonMap);
                 MessageLog.Draw(_messageConsole);
+                Player.DrawStats(_statConsole);
 
                 RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight, _rootConsole, 0, _inventoryHeight);
                 RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight, _rootConsole, _mapWidth, 0);
