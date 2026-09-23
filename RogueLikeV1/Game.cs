@@ -8,6 +8,7 @@ namespace RogueLikeV1
 {
     public class Game
     {
+        private static int _steps = 0;
         //main screen width and height
         private static readonly int _screenWidth = 100;
         private static readonly int _screenHeight = 70;
@@ -47,6 +48,8 @@ namespace RogueLikeV1
 
         public static IRandom Random { get; private set; }
 
+        public static MessageLog MessageLog { get; private set; }
+
         public static void Main()
         {
 
@@ -75,8 +78,9 @@ namespace RogueLikeV1
             _rootConsole.Update += OnRootConsoleUpdate;
             _rootConsole.Render += OnRootConsoleRender;
 
-            _messageConsole.SetBackColor(0, 0, _messageWidth, _messageHeight, Swatch.DbDeepWater);
-            _messageConsole.Print(1, 1, "Messages", Colours.TextHeading);
+            MessageLog = new MessageLog();
+            MessageLog.Add("The rogue arrives on level 1");
+            MessageLog.Add($"Level created with seed '{seed}'");
 
             _statConsole.SetBackColor(0, 0, _statWidth, _statHeight, Swatch.DbOldStone);
             _statConsole.Print(1, 1, "Stats", Colours.TextHeading);
@@ -120,6 +124,12 @@ namespace RogueLikeV1
             {
                 _renderRequired = true;
             }
+            if (didPlayerAct)
+            {
+                // Every time the player acts increment the steps and log it
+                MessageLog.Add($"Step # {++_steps}");
+                _renderRequired = true;
+            }
         }
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
@@ -130,6 +140,7 @@ namespace RogueLikeV1
                 //first draw everything so it updates correctly
                 DungeonMap.Draw(_mapConsole);
                 Player.Draw(_mapConsole, DungeonMap);
+                MessageLog.Draw(_messageConsole);
 
                 RLConsole.Blit(_mapConsole, 0, 0, _mapWidth, _mapHeight, _rootConsole, 0, _inventoryHeight);
                 RLConsole.Blit(_statConsole, 0, 0, _statWidth, _statHeight, _rootConsole, _mapWidth, 0);
