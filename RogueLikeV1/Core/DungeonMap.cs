@@ -7,13 +7,15 @@ namespace RogueLikeV1.Core
 {
     public class DungeonMap: Map
     {
-        public List<Rectangle> Rooms;
+        public List<Rectangle> Rooms { get; set; }
         private readonly List<Monster> _monsters;
+        public List<Door> Doors { get; set; }
 
         public DungeonMap()
         {
             Rooms = new List<Rectangle>();
             _monsters = new List<Monster>();
+            Doors = new List<Door>();
         }
 
         public void Draw(RLConsole mapConsole, RLConsole statConsole)
@@ -32,6 +34,10 @@ namespace RogueLikeV1.Core
                     monster.DrawStats(statConsole, i);
                     i++;
                 }
+            }
+            foreach (Door door in Doors)
+            {
+                door.Draw(mapConsole, this);
             }
         }
 
@@ -89,6 +95,7 @@ namespace RogueLikeV1.Core
                 actor.Y = y;
 
                 SetIsWalkable(actor.X, actor.Y, false);
+                OpenDoor(actor, x, y);
 
                 if (actor is Player)
                 {
@@ -163,6 +170,24 @@ namespace RogueLikeV1.Core
         public Monster GetMonsterAt(int x, int y)
         {
             return _monsters.FirstOrDefault(m => m.X == x && m.Y == y);
+        }
+
+        public Door GetDoor(int x, int y)
+        {
+            return Doors.SingleOrDefault(d => d.X == x && d.Y == y);
+        }
+
+        private void OpenDoor(Actor actor, int x, int y)
+        {
+            Door door = GetDoor(x, y);
+            if (door != null && !door.IsOpen)
+            {
+                door.IsOpen = true;
+                var cell = GetCell(x, y);
+                SetCellProperties(x, y, true, cell.IsWalkable, cell.IsExplored);
+
+                Game.MessageLog.Add($"{actor.Name} opened a door");
+            }
         }
     }
 }

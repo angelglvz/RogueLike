@@ -3,6 +3,7 @@ using RogueLikeV1.Core;
 using RogueSharp;
 using RogueSharp.DiceNotation;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RogueLikeV1.Systems
@@ -70,6 +71,11 @@ namespace RogueLikeV1.Systems
                     CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
                     CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
                 }
+            }
+
+            foreach (Rectangle room in _map.Rooms)
+            {
+                CreateDoors(room);
             }
 
             PlacePlayer();
@@ -140,6 +146,66 @@ namespace RogueLikeV1.Systems
                     }
                 }
             }
+        }
+
+        private void CreateDoors(Rectangle room)
+        {
+            int xMin = room.Left;
+            int xMax = room.Right;
+            int yMin = room.Top;
+            int yMax = room.Bottom;
+
+            List<Cell> borderCells = _map.GetCellsAlongLine(xMin, yMin, xMax, yMin).Cast<Cell>().ToList();
+            borderCells.AddRange(_map.GetCellsAlongLine(xMin, yMin, xMin, yMax).Cast<Cell>());
+            borderCells.AddRange(_map.GetCellsAlongLine(xMin, yMax, xMax, yMax).Cast<Cell>());
+            borderCells.AddRange(_map.GetCellsAlongLine(xMax, yMin, xMax, yMax).Cast<Cell>());
+
+            foreach (Cell cell in borderCells)
+            {
+                if (IsPotentialDoor(cell))
+                {
+                    _map.SetCellProperties(cell.X, cell.Y, false, true);
+                    _map.Doors.Add(new Door
+                    {
+                        X = cell.X,
+                        Y = cell.Y,
+                        IsOpen = false
+                    });
+                }
+            }
+        }
+
+        private bool IsPotentialDoor(Cell cell)
+        {
+            if (!cell.IsWalkable)
+            {
+                return false;
+            }
+
+            Cell right = (Cell)_map.GetCell(cell.X + 1, cell.Y);
+            Cell left = (Cell)_map.GetCell(cell.X - 1, cell.Y);
+            Cell top = (Cell)_map.GetCell(cell.X, cell.Y - 1);
+            Cell bottom = (Cell)_map.GetCell(cell.X, cell.Y + 1);
+
+            if (_map.GetDoor(cell.X, cell.Y) != null ||
+                _map.GetDoor(right.X, right.Y) != null ||
+                _map.GetDoor(left.X, left.Y) != null ||
+                _map.GetDoor(top.X, top.Y) != null ||
+                _map.GetDoor(bottom.X, bottom.Y) != null)
+            {
+                return false;
+            }
+
+            if (right.IsWalkable && left.IsWalkable && !top.IsWalkable && !bottom.IsWalkable)
+            {
+                return true;
+            }
+
+            if (!right.IsWalkable && !left.IsWalkable && top.IsWalkable && bottom.IsWalkable)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
