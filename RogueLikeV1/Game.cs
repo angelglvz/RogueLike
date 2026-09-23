@@ -127,11 +127,13 @@ namespace RogueLikeV1
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
-            //redraw everything only if required
             if (_renderRequired)
             {
-                //first draw everything so it updates correctly
-                DungeonMap.Draw(_mapConsole);
+                _mapConsole.Clear();
+                _statConsole.Clear();
+                _messageConsole.Clear();
+
+                DungeonMap.Draw(_mapConsole, _statConsole);
                 Player.Draw(_mapConsole, DungeonMap);
                 MessageLog.Draw(_messageConsole);
                 Player.DrawStats(_statConsole);
