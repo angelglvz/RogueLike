@@ -7,10 +7,12 @@ namespace RogueLikeV1.Core
     public class DungeonMap: Map
     {
         public List<Rectangle> Rooms;
+        private readonly List<Monster> _monsters;
 
         public DungeonMap()
         {
             Rooms = new List<Rectangle>();
+            _monsters = new List<Monster>();
         }
 
         public void Draw(RLConsole mapConsole)
@@ -19,6 +21,10 @@ namespace RogueLikeV1.Core
             foreach (Cell cell in GetAllCells())
             {
                 SetConsoleSymbolForCell(mapConsole, cell);
+            }
+            foreach (Monster monster in _monsters)
+            {
+                monster.Draw(mapConsole, this);
             }
         }
 
@@ -97,6 +103,45 @@ namespace RogueLikeV1.Core
             Game.Player = player;
             SetIsWalkable(player.X, player.Y, false);
             UpdatePlayerFieldOfView();
+        }
+
+        public void AddMonster(Monster monster)
+        {
+            _monsters.Add(monster);
+            SetIsWalkable(monster.X, monster.Y, false);
+        }
+
+        public Point? GetRandomWalkableLocationInRoom(Rectangle room)
+        {
+            if (DoesRoomHaveWalkableSpace(room))
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    int x = Game.Random.Next(1, room.Width - 2) + room.X;
+                    int y = Game.Random.Next(1, room.Height - 2) + room.Y;
+                    if (IsWalkable(x, y))
+                    {
+                        return new Point(x, y);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public bool DoesRoomHaveWalkableSpace(Rectangle room)
+        {
+            for (int x = 1; x <= room.Width - 2; x++)
+            {
+                for (int y = 1; y <= room.Height - 2; y++)
+                {
+                    if (IsWalkable(x + room.X, y + room.Y))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

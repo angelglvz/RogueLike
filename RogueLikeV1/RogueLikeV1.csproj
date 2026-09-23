@@ -56,6 +56,8 @@
     <Compile Include="Core\Colours.cs" />
     <Compile Include="Core\Direction.cs" />
     <Compile Include="Core\DungeonMap.cs" />
+    <Compile Include="Core\Kobold.cs" />
+    <Compile Include="Core\Monster.cs" />
     <Compile Include="Core\Player.cs" />
     <Compile Include="Core\Swatch.cs" />
     <Compile Include="Game.cs" />
