@@ -4,7 +4,7 @@ using RogueLikeV1.interfaces;
 
 namespace RogueLikeV1.Core
 {
-    public class Actor: IActor, IDrawable
+    public class Actor: IActor, IDrawable, IScheduleable
     {
         private int _attack;
         private int _attackChance;
@@ -155,6 +155,13 @@ namespace RogueLikeV1.Core
             set
             {
                 _speed = value;
+            }
+        }
+        public int Time
+        {
+            get
+            {
+                return Speed;
             }
         }
     }

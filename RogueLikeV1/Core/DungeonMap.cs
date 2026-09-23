@@ -110,12 +110,14 @@ namespace RogueLikeV1.Core
             Game.Player = player;
             SetIsWalkable(player.X, player.Y, false);
             UpdatePlayerFieldOfView();
+            Game.SchedulingSystem.Add(player);
         }
 
         public void AddMonster(Monster monster)
         {
             _monsters.Add(monster);
             SetIsWalkable(monster.X, monster.Y, false);
+            Game.SchedulingSystem.Add(monster);
         }
 
         public Point? GetRandomWalkableLocationInRoom(Rectangle room)
@@ -155,6 +157,7 @@ namespace RogueLikeV1.Core
         {
             _monsters.Remove(monster);
             SetIsWalkable(monster.X, monster.Y, true);
+            Game.SchedulingSystem.Remove(monster);
         }
 
         public Monster GetMonsterAt(int x, int y)

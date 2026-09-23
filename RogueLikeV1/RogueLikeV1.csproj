@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviours\StandardMoveAndAttack.cs" />
     <Compile Include="Core\Actor.cs" />
     <Compile Include="Core\Colours.cs" />
     <Compile Include="Core\Direction.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Core\Swatch.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="interfaces\IActor.cs" />
+    <Compile Include="interfaces\IBehaviour.cs" />
     <Compile Include="interfaces\IDrawable.cs" />
     <Compile Include="interfaces\IScheduleable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

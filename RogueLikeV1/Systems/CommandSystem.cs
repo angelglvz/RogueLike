@@ -1,4 +1,6 @@
 ﻿using RogueLikeV1.Core;
+using RogueLikeV1.interfaces;
+using RogueSharp;
 using RogueSharp.DiceNotation;
 using System.Text;
 
@@ -6,6 +8,7 @@ namespace RogueLikeV1.Systems
 {
     public class CommandSystem
     {
+        public bool IsPlayerTurn { get; set; }
         public bool MovePlayer(Direction direction)
         {
             int x = Game.Player.X;
@@ -52,6 +55,11 @@ namespace RogueLikeV1.Systems
             }
 
             return false;
+        }
+
+        public void EndPlayerTurn()
+        {
+            IsPlayerTurn = false;
         }
 
         public void Attack(Actor attacker, Actor defender)
@@ -155,6 +163,39 @@ namespace RogueLikeV1.Systems
                 Game.DungeonMap.RemoveMonster((Monster)defender);
 
                 Game.MessageLog.Add($"  {defender.Name} died and dropped {defender.Gold} gold");
+            }
+        }
+
+        public void ActivateMonsters()
+        {
+            IScheduleable scheduleable = Game.SchedulingSystem.Get();
+            if (scheduleable is Player)
+            {
+                IsPlayerTurn = true;
+                Game.SchedulingSystem.Add(Game.Player);
+            }
+            else
+            {
+                Monster monster = scheduleable as Monster;
+
+                if (monster != null)
+                {
+                    monster.PerformAction(this);
+                    Game.SchedulingSystem.Add(monster);
+                }
+
+                ActivateMonsters();
+            }
+        }
+
+        public void MoveMonster(Monster monster, Cell cell)
+        {
+            if (!Game.DungeonMap.SetActorPosition(monster, cell.X, cell.Y))
+            {
+                if (Game.Player.X == cell.X && Game.Player.Y == cell.Y)
+                {
+                    Attack(monster, Game.Player);
+                }
             }
         }
     }
