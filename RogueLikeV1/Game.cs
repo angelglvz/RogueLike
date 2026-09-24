@@ -37,6 +37,8 @@ namespace RogueLikeV1
         private static readonly int _inventoryHeight = 11;
 
         private static RLConsole _inventoryConsole;
+
+        private static int _mapLevel = 1;
         private static bool _renderRequired = true;
 
         public static DungeonMap DungeonMap { get; private set; }
@@ -54,8 +56,11 @@ namespace RogueLikeV1
         public static void Main()
         {
 
+            int seed = (int)DateTime.UtcNow.Ticks;
+            Random = new DotNetRandom(seed);
+
             string fontFileName = @"Elementos\terminal8x8.png";
-            string consoleTitle = "RogueLike V1 - Level 1";
+            string consoleTitle = $"RougeSharp V3 Tutorial - Level {_mapLevel} - Seed {seed}";
 
             //instanciate and initalize the consoles
             _mapConsole = new RLConsole(_mapWidth, _mapHeight);
@@ -66,10 +71,8 @@ namespace RogueLikeV1
 
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
 
-            int seed = (int)DateTime.UtcNow.Ticks;
-            Random = new DotNetRandom(seed);
 
-            MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight, 20, 13, 7);
+            MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight, 20, 13, 7, _mapLevel);
             DungeonMap = mapGenerator.CreateMap();
 
             DungeonMap.UpdatePlayerFieldOfView();
@@ -119,6 +122,18 @@ namespace RogueLikeV1
                     else if (keyPress.Key == RLKey.Escape)
                     {
                         _rootConsole.Close();
+                    }
+                    else if (keyPress.Key == RLKey.Period)
+                    {
+                        if (DungeonMap.CanMoveDownToNextLevel())
+                        {
+                            MapGenerator mapGenerator = new MapGenerator(_mapWidth, _mapHeight, 20, 13, 7, ++_mapLevel);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            _rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {_mapLevel}";
+                            didPlayerAct = true;
+                        }
                     }
                 }
 

@@ -18,7 +18,7 @@ namespace RogueLikeV1.Systems
 
         private readonly DungeonMap _map;
 
-        public MapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize)
+        public MapGenerator(int width, int height, int maxRooms, int roomMaxSize, int roomMinSize, int mapLevel)
         {
             _width = width;
             _height = height;
@@ -77,6 +77,8 @@ namespace RogueLikeV1.Systems
             {
                 CreateDoors(room);
             }
+
+            CreateStairs();
 
             PlacePlayer();
 
@@ -206,6 +208,22 @@ namespace RogueLikeV1.Systems
                 return true;
             }
             return false;
+        }
+
+        private void CreateStairs()
+        {
+            _map.StairsUp = new Stairs
+            {
+                X = _map.Rooms.First().Center.X + 1,
+                Y = _map.Rooms.First().Center.Y,
+                IsUp = true
+            };
+            _map.StairsDown = new Stairs
+            {
+                X = _map.Rooms.Last().Center.X,
+                Y = _map.Rooms.Last().Center.Y,
+                IsUp = false
+            };
         }
     }
 }
